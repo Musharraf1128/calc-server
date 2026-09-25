@@ -2,7 +2,7 @@
 
 A minimal HTTP/1.1 calculator server, written in Go using only the raw
 `net` package (no HTTP framework). Built for a network architecture
-course assignment focused on persistent-connection handling.
+course.
 
 Name: Shah Musharaf ul islam
 Roll No: 10447
@@ -48,7 +48,7 @@ curl "http://localhost:8080/add?a=2&b=3"
 
 (or)
 
-run: python/python3 test_server.py
+run: python/python3 test_server.py to run all tests at onces.
 ```
 
 To verify persistence, open one raw socket and send multiple requests
