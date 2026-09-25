@@ -4,6 +4,9 @@ A minimal HTTP/1.1 calculator server, written in Go using only the raw
 `net` package (no HTTP framework). Built for a network architecture
 course assignment focused on persistent-connection handling.
 
+Name: Shah Musharaf ul islam
+Roll No: 10447
+
 ## What it does
 
 Serves four arithmetic operations over GET requests, and returns the
@@ -42,6 +45,10 @@ go build -o calc-server main.go
 
 ```bash
 curl "http://localhost:8080/add?a=2&b=3"
+
+(or)
+
+run: python/python3 test_server.py
 ```
 
 To verify persistence, open one raw socket and send multiple requests
