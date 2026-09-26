@@ -11,9 +11,8 @@ import (
 	"strings"
 )
 
-// writeResponse sends a full HTTP/1.1 response with a correct
-// Content-Length and explicitly keeps the connection open. We never
-// close conn ourselves here - the caller's loop decides that.
+// writeResponse sends a full HTTP/1.1 response, correct Content-Length + connection stays open explicitly.
+// also conn close is decided by caller's loop close conn ourselves here - the caller's loop decides that.
 func writeResponse(conn net.Conn, status int, statusText, body string) error {
 	resp := fmt.Sprintf(
 		"HTTP/1.1 %d %s\r\nContent-Length: %d\r\nConnection: keep-alive\r\n\r\n%s",
@@ -24,7 +23,6 @@ func writeResponse(conn net.Conn, status int, statusText, body string) error {
 }
 
 // parseNumber rejects anything that isn't a clean integer - "x", "",
-// "3.5" (spec only shows integer results) all count as bad input.
 func parseNumber(s string) (int, bool) {
 	n, err := strconv.Atoi(s)
 	if err != nil {
@@ -40,21 +38,19 @@ func handleConn(conn net.Conn) {
 	for {
 		requestLine, err := reader.ReadString('\n')
 		if err != nil {
-			return // client closed the connection - normal end of session
+			return // client close - normal end of seesion
 		}
 		requestLine = strings.TrimRight(requestLine, "\r\n")
 
 		parts := strings.Split(requestLine, " ")
 		if len(parts) != 3 {
-			// Malformed request line - can't safely keep parsing this
+			// malformed request line - can't safely keep parsing this
 			// connection, so bail rather than guess.
 			writeResponse(conn, 400, "Bad Request", "malformed request line\n")
 			return
 		}
 		method, target := parts[0], parts[1]
 
-		// Read headers until the blank line. We stop exactly there and
-		// never read ahead into whatever the client sends next.
 		headers := make(map[string]string)
 		contentLength := 0
 		for {
@@ -88,7 +84,7 @@ func handleConn(conn net.Conn) {
 			}
 		}
 
-		// Missing Host header -> 400, per the assignment's explicit case.
+		// Missing Host header -> 400.
 		if _, ok := headers["host"]; !ok {
 			if err := writeResponse(conn, 400, "Bad Request", "missing Host header\n"); err != nil {
 				return
@@ -96,7 +92,7 @@ func handleConn(conn net.Conn) {
 			continue
 		}
 
-		// Wrong method -> 405. Every route in this assignment is GET-only.
+		// Wrong method -> 405.
 		if method != "GET" {
 			if err := writeResponse(conn, 405, "Method Not Allowed", "method not allowed\n"); err != nil {
 				return
@@ -154,7 +150,7 @@ func handleConn(conn net.Conn) {
 		if err := writeResponse(conn, 200, "OK", body); err != nil {
 			return
 		}
-		// Loop back for the next request on this same connection.
+		// loop back for the next request on this same connection.
 	}
 }
 
