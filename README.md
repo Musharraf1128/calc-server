@@ -73,13 +73,14 @@ go build -o calc-server main.go
 
 ## Testing manually
 
+single test:
 ```bash
-single:
 curl "http://localhost:8080/add?a=2&b=3"
-
+```
 (or)
 
-all:
+all tests:
+```bash
 chmod +x test_server.sh
 ./test_server.sh
 ```
