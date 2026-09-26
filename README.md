@@ -44,11 +44,14 @@ go build -o calc-server main.go
 ## Testing manually
 
 ```bash
+single:
 curl "http://localhost:8080/add?a=2&b=3"
 
 (or)
 
-run: python/python3 test_server.py to run all tests at onces.
+all:
+chmod +x test_server.sh
+./test_server.sh
 ```
 
 To verify persistence, open one raw socket and send multiple requests
